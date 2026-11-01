@@ -1,10 +1,10 @@
 # Guion de demostración: 4 minutos y 30 segundos
 
-Antes de grabar: completar los nombres reales de 2 a 4 integrantes, ejecutar `npm ci`, `npm run seed`, `npm test` y `npm start`; importar la colección. Mostrar terminal y Postman con texto legible. Los ejemplos usan URLs ficticias.
+Antes de grabar: ejecutar `npm ci`, `npm run seed`, `npm test` y `npm start`; importar la colección. Mostrar terminal y Postman con texto legible. Los ejemplos usan URLs ficticias. La presentación identifica únicamente al autor real del trabajo.
 
 ## 0:00-0:25 | Presentación
 
-“Soy José David Osorio Gallego. Este trabajo fue desarrollado con [nombrar a los integrantes reales]. Presentamos la API REST de películas y series para la evidencia S35 - EA1. Implementamos los módulos de género, director, productora, tipo y media con Node.js, Express y SQLite.”
+“Soy José David Osorio Gallego y presento de manera individual la API REST de películas y series para la evidencia S35 - EA1. La aplicación incluye los módulos de género, director, productora, tipo y media, desarrollados con Node.js, Express y SQLite.”
 
 ## 0:25-0:55 | Diseño
 
@@ -42,4 +42,4 @@ Mostrar el repositorio.
 
 “El repositorio incluye el código, esquema SQL, instrucciones, colección de Postman y contrato OpenAPI. La entrega cubre el backend solicitado. Como mejora futura se puede integrar una interfaz de administración. Gracias.”
 
-Subir la grabación real a Google Drive. Comprobar que el docente puede abrir el enlace y copiarlo en la entrega de Canvas. No declarar grabado o compartido un video que todavía no existe. Si se utiliza la alternativa escrita autorizada por la consigna, entregar el informe completando su portada.
+Subir la grabación real a Google Drive. Comprobar que el docente puede abrir el enlace y copiarlo en la entrega de Canvas. Si se utiliza la alternativa escrita prevista por la consigna, entregar el informe con la portada individual.

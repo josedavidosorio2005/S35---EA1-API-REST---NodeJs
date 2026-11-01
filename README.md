@@ -2,7 +2,7 @@
 
 API de administración de películas y series basada en el caso de estudio de la IU Digital de Antioquia. Incluye **Género, Director, Productora, Tipo y Media**, almacenamiento SQLite y una colección ejecutable de Postman.
 
-**Estudiante:** José David Osorio Gallego. La actividad exige entre 2 y 4 estudiantes: completar los integrantes reales en `docs/ENTREGA.md` y en la portada del informe antes de entregar.
+**Estudiante:** José David Osorio Gallego. **Presentación individual.**
 
 ## Ejecutar en Windows, Linux o macOS
 

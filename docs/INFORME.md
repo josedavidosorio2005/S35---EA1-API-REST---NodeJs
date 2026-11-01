@@ -1,7 +1,7 @@
 # Diseño e implementación de una API REST para la gestión de películas y series
 
 José David Osorio Gallego  
-Integrantes adicionales: completar con los nombres reales antes de entregar  
+Trabajo individual  
 Institución Universitaria Digital de Antioquia  
 Ingeniería Web II  
 S35 - EA1: API REST - NodeJs  
@@ -93,7 +93,7 @@ La colección de Postman organiza solicitudes para crear y actualizar los cinco 
 
 La solución implementa creación y actualización en los cinco módulos solicitados y agrega consulta, eliminación y modificación parcial. La base de datos conserva las producciones entre ejecuciones y evita duplicados de serial y URL. Las claves foráneas y las validaciones de estado mantienen relaciones consistentes sin perder la información histórica cuando un catálogo se desactiva.
 
-La estructura del código, las pruebas y la colección de Postman permiten reproducir el funcionamiento y explicar cada servicio. Como trabajo posterior se propone integrar una interfaz de administración y, si el alcance institucional lo requiere, definir autenticación y pruebas de concurrencia. La entrega actual cumple el alcance técnico de la evidencia API REST; la conformación del equipo y el envío en Canvas deben completarse con la información real del grupo.
+La estructura del código, las pruebas y la colección de Postman permiten reproducir el funcionamiento y explicar cada servicio. Como trabajo posterior se propone integrar una interfaz de administración y, si el alcance institucional lo requiere, definir autenticación y pruebas de concurrencia. La entrega actual cubre el alcance técnico de la evidencia API REST y se presenta de forma individual.
 
 ## Referencias
 
@@ -107,4 +107,4 @@ OpenJS Foundation. (s. f.). *5.x API reference*. Express. https://expressjs.com/
 
 https://github.com/josedavidosorio2005/S35---EA1-API-REST---NodeJs
 
-El documento es la alternativa escrita contemplada en la consigna si el equipo no puede subir el video. Completar los integrantes reales en la portada antes de entregar.
+El documento corresponde a la alternativa escrita contemplada en la consigna cuando no es posible subir el video.
