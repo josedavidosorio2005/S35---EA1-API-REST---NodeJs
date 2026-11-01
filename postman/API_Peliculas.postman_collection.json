@@ -1,0 +1,1198 @@
+{
+  "info": {
+    "name": "S35 EA1 - API de películas y series",
+    "description": "Ejecutar completa y en orden. Genera sus propios datos e IDs. Las URL son ficticias. Limpia sus datos al final.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:3000"
+    },
+    {
+      "key": "run_id",
+      "value": ""
+    },
+    {
+      "key": "genero_id",
+      "value": ""
+    },
+    {
+      "key": "director_id",
+      "value": ""
+    },
+    {
+      "key": "productora_id",
+      "value": ""
+    },
+    {
+      "key": "tipo_id",
+      "value": ""
+    },
+    {
+      "key": "media_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Salud e inicio de ejecución",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('run_id', Date.now().toString() + Math.random().toString(36).slice(2, 8));",
+              "pm.collectionVariables.unset('genero_id');",
+              "pm.collectionVariables.unset('director_id');",
+              "pm.collectionVariables.unset('productora_id');",
+              "pm.collectionVariables.unset('tipo_id');",
+              "pm.collectionVariables.unset('media_id');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('SQLite disponible', () => pm.expect(pm.response.json().base_datos).to.eql('SQLite'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Crear los cinco módulos",
+      "item": [
+        {
+          "name": "Crear generos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/generos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "generos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Género demo {{run_id}}\",\n  \"estado\": \"Activo\",\n  \"descripcion\": \"Género ficticio para demostrar el CRUD.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('genero_id', pm.response.json().data.id);",
+                  "pm.test('ID generado', () => pm.expect(pm.response.json().data.id).to.be.a('number'));",
+                  "pm.test('Fecha generada', () => pm.expect(pm.response.json().data.fecha_creacion).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear directores",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/directores",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "directores"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Director demo {{run_id}}\",\n  \"estado\": \"Activo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('director_id', pm.response.json().data.id);",
+                  "pm.test('ID generado', () => pm.expect(pm.response.json().data.id).to.be.a('number'));",
+                  "pm.test('Fecha generada', () => pm.expect(pm.response.json().data.fecha_creacion).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear productoras",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productoras",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productoras"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Productora demo {{run_id}}\",\n  \"estado\": \"Activo\",\n  \"slogan\": \"Historias para aprender\",\n  \"descripcion\": \"Productora ficticia del ejercicio.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('productora_id', pm.response.json().data.id);",
+                  "pm.test('ID generado', () => pm.expect(pm.response.json().data.id).to.be.a('number'));",
+                  "pm.test('Fecha generada', () => pm.expect(pm.response.json().data.fecha_creacion).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear tipos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tipos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Tipo demo {{run_id}}\",\n  \"descripcion\": \"Tipo de producción utilizado en la demostración.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('tipo_id', pm.response.json().data.id);",
+                  "pm.test('ID generado', () => pm.expect(pm.response.json().data.id).to.be.a('number'));",
+                  "pm.test('Fecha generada', () => pm.expect(pm.response.json().data.fecha_creacion).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear media",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serial\": \"MED-{{run_id}}\",\n  \"titulo\": \"Viaje de prueba\",\n  \"sinopsis\": \"Una aventura ficticia para verificar la API.\",\n  \"url\": \"https://example.org/video-{{run_id}}.mp4\",\n  \"imagen_portada\": \"https://example.org/portada.jpg\",\n  \"anio_estreno\": 2026,\n  \"genero_id\": {{genero_id}},\n  \"director_id\": {{director_id}},\n  \"productora_id\": {{productora_id}},\n  \"tipo_id\": {{tipo_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('media_id', pm.response.json().data.id);",
+                  "pm.test('ID generado', () => pm.expect(pm.response.json().data.id).to.be.a('number'));",
+                  "pm.test('Fecha generada', () => pm.expect(pm.response.json().data.fecha_creacion).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 - Actualizar los cinco módulos",
+      "item": [
+        {
+          "name": "Actualizar generos con PUT",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/generos/{{genero_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "generos",
+                "{{genero_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Género demo {{run_id}}\",\n  \"estado\": \"Activo\",\n  \"descripcion\": \"Valor actualizado en la demostración\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Cambio aplicado', () => pm.expect(pm.response.json().data.descripcion).to.eql(pm.variables.replaceIn(\"Valor actualizado en la demostración\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar directores con PUT",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/directores/{{director_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "directores",
+                "{{director_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Director actualizado {{run_id}}\",\n  \"estado\": \"Activo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Cambio aplicado', () => pm.expect(pm.response.json().data.nombres).to.eql(pm.variables.replaceIn(\"Director actualizado {{run_id}}\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar productoras con PUT",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productoras/{{productora_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productoras",
+                "{{productora_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Productora demo {{run_id}}\",\n  \"estado\": \"Activo\",\n  \"slogan\": \"Historias para aprender\",\n  \"descripcion\": \"Valor actualizado en la demostración\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Cambio aplicado', () => pm.expect(pm.response.json().data.descripcion).to.eql(pm.variables.replaceIn(\"Valor actualizado en la demostración\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar tipos con PUT",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tipos/{{tipo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos",
+                "{{tipo_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Tipo demo {{run_id}}\",\n  \"descripcion\": \"Valor actualizado en la demostración\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Cambio aplicado', () => pm.expect(pm.response.json().data.descripcion).to.eql(pm.variables.replaceIn(\"Valor actualizado en la demostración\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar media con PUT",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media/{{media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media",
+                "{{media_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serial\": \"MED-{{run_id}}\",\n  \"titulo\": \"Valor actualizado en la demostración\",\n  \"sinopsis\": \"Una aventura ficticia para verificar la API.\",\n  \"url\": \"https://example.org/video-{{run_id}}.mp4\",\n  \"imagen_portada\": \"https://example.org/portada.jpg\",\n  \"anio_estreno\": 2026,\n  \"genero_id\": {{genero_id}},\n  \"director_id\": {{director_id}},\n  \"productora_id\": {{productora_id}},\n  \"tipo_id\": {{tipo_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Cambio aplicado', () => pm.expect(pm.response.json().data.titulo).to.eql(pm.variables.replaceIn(\"Valor actualizado en la demostración\")));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - Consultar",
+      "item": [
+        {
+          "name": "Listar generos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "generos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Listado paginado', () => { const r=pm.response.json(); pm.expect(r.data).to.be.an('array'); pm.expect(r.pagination.total).to.be.at.least(1); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar directores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/directores",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "directores"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Listado paginado', () => { const r=pm.response.json(); pm.expect(r.data).to.be.an('array'); pm.expect(r.pagination.total).to.be.at.least(1); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar productoras",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/productoras",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productoras"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Listado paginado', () => { const r=pm.response.json(); pm.expect(r.data).to.be.an('array'); pm.expect(r.pagination.total).to.be.at.least(1); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar tipos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tipos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Listado paginado', () => { const r=pm.response.json(); pm.expect(r.data).to.be.an('array'); pm.expect(r.pagination.total).to.be.at.least(1); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar media",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Listado paginado', () => { const r=pm.response.json(); pm.expect(r.data).to.be.an('array'); pm.expect(r.pagination.total).to.be.at.least(1); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar media con sus relaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/media/{{media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media",
+                "{{media_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Cuatro relaciones', () => { const d=pm.response.json().data; ['genero','director','productora','tipo'].forEach(k => pm.expect(d[k].id).to.be.a('number')); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 - Reglas y errores esperados",
+      "item": [
+        {
+          "name": "Serial duplicado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serial\": \"MED-{{run_id}}\",\n  \"titulo\": \"Viaje de prueba\",\n  \"sinopsis\": \"Una aventura ficticia para verificar la API.\",\n  \"url\": \"https://example.org/otro-{{run_id}}.mp4\",\n  \"imagen_portada\": \"https://example.org/portada.jpg\",\n  \"anio_estreno\": 2026,\n  \"genero_id\": {{genero_id}},\n  \"director_id\": {{director_id}},\n  \"productora_id\": {{productora_id}},\n  \"tipo_id\": {{tipo_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "URL duplicada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serial\": \"OTRO-{{run_id}}\",\n  \"titulo\": \"Viaje de prueba\",\n  \"sinopsis\": \"Una aventura ficticia para verificar la API.\",\n  \"url\": \"https://example.org/video-{{run_id}}.mp4\",\n  \"imagen_portada\": \"https://example.org/portada.jpg\",\n  \"anio_estreno\": 2026,\n  \"genero_id\": {{genero_id}},\n  \"director_id\": {{director_id}},\n  \"productora_id\": {{productora_id}},\n  \"tipo_id\": {{tipo_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Referencia inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serial\": \"MED-{{run_id}}\",\n  \"titulo\": \"Viaje de prueba\",\n  \"sinopsis\": \"Una aventura ficticia para verificar la API.\",\n  \"url\": \"https://example.org/video-{{run_id}}.mp4\",\n  \"imagen_portada\": \"https://example.org/portada.jpg\",\n  \"anio_estreno\": 2026,\n  \"genero_id\": 999999999,\n  \"director_id\": {{director_id}},\n  \"productora_id\": {{productora_id}},\n  \"tipo_id\": {{tipo_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422', function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Desactivar género",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/generos/{{genero_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "generos",
+                "{{genero_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Inactivo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear media con género inactivo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serial\": \"INACT-{{run_id}}\",\n  \"titulo\": \"Viaje de prueba\",\n  \"sinopsis\": \"Una aventura ficticia para verificar la API.\",\n  \"url\": \"https://example.org/inactivo-{{run_id}}\",\n  \"imagen_portada\": \"https://example.org/portada.jpg\",\n  \"anio_estreno\": 2026,\n  \"genero_id\": {{genero_id}},\n  \"director_id\": {{director_id}},\n  \"productora_id\": {{productora_id}},\n  \"tipo_id\": {{tipo_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422', function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar título conservando histórico",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media/{{media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media",
+                "{{media_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Histórico conservado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reactivar género",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/generos/{{genero_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "generos",
+                "{{genero_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Activo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Borrado de productora referenciada",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/productoras/{{productora_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productoras",
+                "{{productora_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 - Limpieza de esta ejecución",
+      "item": [
+        {
+          "name": "Eliminar media creado en esta ejecución",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/media/{{media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "media",
+                "{{media_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar generos creado en esta ejecución",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generos/{{genero_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "generos",
+                "{{genero_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar directores creado en esta ejecución",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/directores/{{director_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "directores",
+                "{{director_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar productoras creado en esta ejecución",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/productoras/{{productora_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "productoras",
+                "{{productora_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar tipos creado en esta ejecución",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tipos/{{tipo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos",
+                "{{tipo_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

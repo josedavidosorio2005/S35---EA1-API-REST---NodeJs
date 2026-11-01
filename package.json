@@ -1,0 +1,15 @@
+{
+  "name": "iudigital-api-peliculas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "S35 EA1: API REST de películas y series con Node.js, Express y SQLite",
+  "type": "module",
+  "engines": { "node": ">=24.13.0 <25" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "seed": "node db/seed.js"
+  },
+  "dependencies": { "express": "5.3.0" }
+}
