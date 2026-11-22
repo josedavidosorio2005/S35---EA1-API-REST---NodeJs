@@ -2,7 +2,7 @@ import { createApp } from './app.js';
 import { openDatabase } from './database.js';
 
 const port = Number(process.env.PORT || 3000);
-const host = process.env.HOST || '127.0.0.1';
+const host = process.env.HOST || '0.0.0.0';
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT debe estar entre 1 y 65535.');
 const db = openDatabase();
 const server = createApp(db).listen(port, host, () => console.log(`API disponible en http://${host}:${port}`));
