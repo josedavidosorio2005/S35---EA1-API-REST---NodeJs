@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: cineapp-ea3-jose
+    runtime: node
+    plan: free
+    branch: feat/f30-ea3-render-2026
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24.22.1"
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: "0.0.0.0"
