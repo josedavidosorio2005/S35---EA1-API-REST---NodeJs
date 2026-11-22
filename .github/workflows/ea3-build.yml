@@ -1,0 +1,25 @@
+name: F30 EA3 - Integracion y build
+on:
+  push:
+    branches:
+      - main
+      - feat/f30-ea3-render-2026
+  pull_request:
+    branches:
+      - main
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.1'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Comprobar salida de React
+        run: |
+          test -s frontend/dist/index.html
+          test -d frontend/dist/assets
