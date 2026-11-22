@@ -1,0 +1,22 @@
+name: EA3 - Paquete de codigo fuente
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  empaquetar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+      - name: Crear ZIP del repositorio
+        run: git archive --format=zip --output F30_EA3_Codigo_Fuente_CineApp.zip HEAD
+      - name: Adjuntar codigo fuente
+        uses: actions/upload-artifact@v4
+        with:
+          name: F30_EA3_Codigo_Fuente
+          path: F30_EA3_Codigo_Fuente_CineApp.zip
+          retention-days: 30
+          if-no-files-found: error
