@@ -4,12 +4,17 @@
   "private": true,
   "description": "S35 EA1: API REST de películas y series con Node.js, Express y SQLite",
   "type": "module",
-  "engines": { "node": ">=24.13.0 <25" },
+  "engines": {
+    "node": ">=24.13.0 <25"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "test": "node --test",
-    "seed": "node db/seed.js"
+    "seed": "node db/seed.js",
+    "build": "npm ci --prefix frontend && npm run build --prefix frontend"
   },
-  "dependencies": { "express": "5.3.0" }
+  "dependencies": {
+    "express": "5.3.0"
+  }
 }
