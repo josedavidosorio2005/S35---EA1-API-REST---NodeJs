@@ -41,7 +41,10 @@ export function createApp(db) {
   const frontendIndex = join(frontendDist, 'index.html');
   if (existsSync(frontendIndex)) app.use(express.static(frontendDist));
 
-  app.get('/', (req, res) => res.json({ nombre: 'API de películas y series', version: '1.0.0', modulos: Object.keys(modules).map(name => `/api/${name}`) }));
+  app.get('/', (req, res) => {
+    if (existsSync(frontendIndex)) return res.sendFile(frontendIndex);
+    res.json({ nombre: 'API de películas y series', version: '1.0.0', modulos: Object.keys(modules).map(name => `/api/${name}`) });
+  });
   app.get('/api/health', (req, res) => {
     db.prepare('SELECT 1').get();
     res.json({ estado: 'ok', base_datos: 'SQLite' });
