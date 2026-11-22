@@ -6,6 +6,22 @@ import { ApiError, errorHandler } from './errors.js';
 export function createApp(db) {
   const app = express();
   app.disable('x-powered-by');
+  // El frontend React es otro servicio de Render: habilitar solo su origen
+  // exacto mediante FRONTEND_ORIGIN (permite varios, separados por comas).
+  const origenes = new Set((process.env.FRONTEND_ORIGIN || '')
+    .split(',').map(origen => origen.trim()).filter(Boolean));
+  app.use((req, res, next) => {
+    const origen = req.get('Origin');
+    if (origen && origenes.has(origen)) {
+      res.set('Access-Control-Allow-Origin', origen);
+      res.vary('Origin');
+      res.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS');
+      res.set('Access-Control-Allow-Headers', 'Content-Type');
+      res.set('Access-Control-Max-Age', '600');
+    }
+    if (req.method === 'OPTIONS') return res.status(204).end();
+    next();
+  });
   app.set('query parser', 'simple');
   app.use((req, res, next) => {
     res.set('X-Content-Type-Options', 'nosniff');
