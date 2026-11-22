@@ -3,7 +3,7 @@ services:
     name: cineapp-ea3-jose
     runtime: node
     plan: free
-    branch: feat/f30-ea3-render-2026
+    branch: main
     buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
